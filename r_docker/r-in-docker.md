@@ -15,16 +15,16 @@ Docker as a technology is built around the concept of a container. Containers ar
 
 source: https://docker-curriculum.com
 
-## What is Google Cloud Run and why do we need it?
 
 
 ## Setting up an R environment in Docker
 ### Install Docker
-1. Make sure Docker is installed, this can be tested locally by installing Docker (we will be on MacOSX for this tutorial) or making sure docker is connected in Google Cloud Shell via [this tutorial]
-2. Set up our container and base image
+Make sure you have docker installed on your computer and you have access to a Code Editor and command line shell., this can be tested locally by installing Docker (we will be on MacOSX for this tutorial) or making sure docker is connected in Google Cloud Shell via [this tutorial]
+
+Let's set up our container and base image.
 
 ### Pull the R Base image
-First we are going to pull an image from the Open Source [Rocker](https://hub.docker.com/u/rocker) project.
+First we are going to pull an image from the Open Source [Rocker](https://hub.docker.com/u/rocker) project. "Pulling" an image refers to downloading a previously created image with software included prebuilt, so we don't have to do the heavy lifting of setting up an R environment from scratch. We have two options. There is an `r-base` image that has a bare bones R environment, we can also use the `r-tidyverse` base image if we want some more data science tools right off the bat...
 
       docker pull rocker/r-base
 We can test out and run the docker container with this:
@@ -33,7 +33,7 @@ We can test out and run the docker container with this:
 
 From this initial test run we can see the terminal was turned into an R console, which we can now interact with thanks to the -it argument. The —-rm argument makes sure the container is automatically removed once we stop it. 
 
-One thing to keep in mind is that when a container start it is startingthe environment from scratch every time the container is started. Typically if we wanted to run an R script we would need to install packages. What we'll want to do is make sure those packages are installed from the get go. We can do this by setting up our Docker file to serve as a blueprint. The Docker file sets up the container image. We can build the container from the Docker file and it will have all of the code and packages and software needed to run our R environment in isolation and execute our script. Our software is self contained!
+One thing to keep in mind is that when a container start it is starting the environment from scratch every time the container is started. Typically if we wanted to run an R script we would need to install packages. What we'll want to do is make sure those packages are installed from the get go. We can do this by setting up our Docker file to serve as a blueprint. The Docker file sets up the container image. We can build the container from the Docker file and it will have all of the code and packages and software needed to run our R environment in isolation and execute our script. Our software is self contained!
 
 ### Setting up the Docker file
 
