@@ -1,6 +1,12 @@
 # r-docker-cloud-run
 Tutorials detailing an overview of running R in Docker, and then deploying it as an app via GCP Cloud Run
 
+## [/r_docker](/r_docker/r-in-docker.md)
+A basic tutorial of of how Docker works. Included details on how to design a container, build it, run it, and deploy it to Cloud Run.
+
+## /gsheets_plumber
+A tutorial of setting up a basic web application using the Plumber API package in R. Goes over how to properly deploy API endpoints in Cloud Run and how to schedule jobs in Google Cloud Scheduler
+
 
 ### Helpful Links:
 https://code.markedmondson.me/googleCloudRunner/articles/cloudrun.html
