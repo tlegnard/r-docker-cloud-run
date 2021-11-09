@@ -20,7 +20,7 @@ Cloud Run with R Hello World https://github.com/Jinksi/cloudrun-helloworld-r
 ### A way of deploying to Cloud Run via an RStudio Package:
 https://code.markedmondson.me/googleCloudRunner/articles/cloudrun.html
 
-Further Reading
+### Further Reading
 Google Sheets + Cloud Run https://medium.com/google-cloud/google-sheets-cloud-run-ffc1875d2a1
 
 R-Powered Services that are simple, scalable, and Secure: https://towardsdatascience.com/r-powered-services-that-are-simple-scalabale-and-secure-4c454c159e48
