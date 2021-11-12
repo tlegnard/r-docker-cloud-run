@@ -163,11 +163,36 @@ Let's try out our `/migrate_data` end point that we created. Let's first take a 
 
 If we then look at our google shee, we can see our endpoint fired and created our pivot table in a new tab calledj `output` in our Google Sheet!
 
-![google sheet](images/sheet-output.png)
+<img src="images/sheet-output.png" alt="drawing" width="200"/>
 
-Well that was fun, and our app is working as intended. There a few more things we can do to clean it up, but the last thing we are going to worr about for now is securing our app in GCP and figuring out how to manage API credentials securely so we utilize third party data for some more automated dat analysis!
 
-This can be found in the tutorial [Securing a Service in Cloud Run](/securing-containers/cloud-run-security.md)
+Well that was fun, and our app is working as intended. There a few more things we can do to clean it up, but the last thing we are going to worr about for now is scheduling our POST command to run daily via Cloud Scheduler.
+
+## Schedule our app endpoint in Cloud Scheduler
+
+Finally, we are going to set up our endpoint to run via Cloud Scheduler, a service provided by Google Cloud to setup what are essentially cron jobs in an easy to used, UI based format.
+
+Normally, we would run a cronjob using the crontab in a unix terminal, but in this case we would want our command to run via Cloud Scheduler, first we need to know how to access our POST command outside of our Swagger documentation page, luckly our __docs__ page tells us how to do this. When we execute our POST call via Swagger, the output show us how this command could be run via curl:
+
+        curl -X POST "https://gsheets-plumber-5p4okqxgza-uc.a.run.app/migrate_data" -H  "accept: */*" -d ""
+
+This is what we are going to schedule in Cloud Scheduler. We want this to run weekly on Tuesdays at 4:05 AM. We are going to use crontab syntax to define this time. If you are unsure how to set this up, visit https://crontab.guru to learn more about formatting in crontab
+
+Our timing will look like this:
+
+        5 4 * * 2
+
+Now that we have all of the pieces, lets set it up in Cloud Scheduler:
+
+![Scheduler-Set-up-1](images/scheduler1.png)
+
+![Scheduler-Set-up-2](images/scheduler2.png)
+
+And voila! We are done and our spreadsheet will update our output tab every Tuesday.
+
+This sums up this part of our Docker overview. Then next part can be ound in the tutorial [Securing a Service in Cloud Run](/securing-containers/cloud-run-security.md), where we will learn how to secure our app in GCP and figuring out how to manage API credentials securely so we utilize third party data for some more automated dat analysis!
+
+
 
 
 
