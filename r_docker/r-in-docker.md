@@ -1,5 +1,5 @@
 # Deploying R in Docker
-In this tutorial we will answer the question: How do I efficiently and securely deploy an R script in Docker, and deploy it to Google Cloud Run. In order to answer this question adequately, we need to break it down into a process that is composed of two parts.
+In this tutorial we will answer the question: How do we efficiently and securely deploy an R script in Docker, and deploy it to Google Cloud Run. In order to answer this question adequately, we need to break it down into a process that is composed of two parts.
 1. Set up an R environment in Docker
 2. Deploy that image to Google Cloud Platform via Cloud Run
 ## What is Docker?
@@ -11,7 +11,7 @@ An image is a read-only template with instructions for creating a Docker contain
 ![Docker Overview](images/docker-diagram.png.webp)
 
 ## What is a container?
-Docker as a technology is built around the concept of a container. Containers are similar to a virtual machine in that it is able to operate independently, but different because it can use the lower level resources required to run programming on the host OS.
+Docker as a technology is built around the concept of a container. A container is similar to a virtual machine in that it is able to operate independently, but different because it can use the lower level resources required to run programming on the host OS.
 
 source: https://docker-curriculum.com
 
@@ -21,7 +21,7 @@ source: https://docker-curriculum.com
 ### Install Docker
 Make sure you have docker installed on your computer and you have access to a Code Editor and command line shell., this can be tested locally by installing Docker (we will be on MacOSX for this tutorial) or making sure docker is connected in Google Cloud Shell via [this tutorial]
 
-Let's set up our container and base image.
+First, let's set up our container and base image.
 
 ### Pull the R Base image
 First we are going to pull an image from the Open Source [Rocker](https://hub.docker.com/u/rocker) project. "Pulling" an image refers to downloading a previously created image with software included prebuilt, so we don't have to do the heavy lifting of setting up an R environment from scratch. We have two options. There is an `r-base` image that has a bare bones R environment, we can also use the `r-tidyverse` base image if we want some more data science tools right off the bat...
@@ -33,11 +33,11 @@ We can test out and run the docker container with this:
 
 From this initial test run we can see the terminal was turned into an R console, which we can now interact with thanks to the -it argument. The —-rm argument makes sure the container is automatically removed once we stop it. 
 
-One thing to keep in mind is that when a container start it is starting the environment from scratch every time the container is started. Typically if we wanted to run an R script we would need to install packages. What we'll want to do is make sure those packages are installed from the get go. We can do this by setting up our Docker file to serve as a blueprint. The Docker file sets up the container image. We can build the container from the Docker file and it will have all of the code and packages and software needed to run our R environment in isolation and execute our script. Our software is self contained!
+One thing to keep in mind is that when a container starts, it is creating the environment from the compressed image stored within that conainers source content. Typically if we wanted to run an R script we would need to install packages. What we'll want to do is make sure those packages are installed from the get go. We can do this by setting up our Docker file to serve as a blueprint. The Docker file sets up the container image. We can build the container from the Docker file and it will have all of the code and packages and software needed to run our R environment in isolation and execute our script. Our software is self contained!
 
 ### Setting up the Docker file
 
-With a Dockerfile, we tell Docker how to build our new image. A Dockerfile is a text file that must be called "ockerfile.txt“ and by default is assumed to be located in the build-context root directory (which in our case would be the "myScript.R“ folder). First, we have to define the image on top of which we’d like to build ours. Depending on how we’d like our image to be set up, we give it a list of instructions so that running containers will be as smooth and efficient as possible. In this case, I’d like to base our new image on the previously discussed rocker/r-base image. Next, we replicate the local folder structure, so we can specify the directories we want in the Dockerfile. After that we copy the files which we want our image to have access to into said directories – this is how you get your R script into the Docker image. Furthermore, this allows us to prevent having to manually install packages after starting a container, as we can prepare a second R script that takes care of the package installation. Simply copying the R script is not enough, we also need to tell Docker to automatically run it when building the image. And that’s our first Dockerfile!
+With a Dockerfile, we tell Docker how to build our new image. A Dockerfile is a text file that must be called `Dockerfile` and by default is assumed to be located in the build-context root directory (which in our case would be the r_docker folder within our repository). First, we have to define the image on top of which we’d like to build ours. Depending on how we’d like our image to be set up, we give it a list of instructions so that running containers will be as smooth and efficient as possible. In this case, we want to base our new image on the previously discussed rocker/r-base image. Next, we replicate the local folder structure, so we can specify the directories we want in the Dockerfile. After that we copy the files which we want our image to have access to into said directories – this is how you get your R script into the Docker image. Furthermore, this allows us to prevent having to manually install packages after starting a container, as we can prepare a second R script that takes care of the package installation. Simply copying the R script is not enough, we also need to tell Docker to automatically run it when building the image. And that’s our first Dockerfile!
 
      # Base image https://hub.docker.com/u/oliverstatworx/
       FROM oliverstatworx/base-r-tidyverse:latest
@@ -46,7 +46,7 @@ With a Dockerfile, we tell Docker how to build our new image. A Dockerfile is a 
       RUN mkdir -p /01_data
       RUN mkdir -p /02_code
       RUN mkdir -p /03_output
-      #ADD /01_data/us-500.csv /01_data/us-500.csv
+
 
       ## copy files
       COPY /02_code/myScript.R /02_code/myScript.R
@@ -131,47 +131,3 @@ You can see in the terminal that our docker image is getting built and saved to 
 But if we go to the logs tab below this error, we'll see that our script still ran, how could this be? The answer is, because we supplied the script which runs successfully, but we didn't supply an API infrastructure that most web applications needs to continiously operate. The script simply runs, and then our app times out. This is no good, we want our app to stay online so we can repeatedly do tasks. This is where we'll need something like the Plumber library in R, which will let us stand up an API and connect to endpoints to allow us to run our R code on command! ![](images/run-logs.png)
 
 You can find this in the tutorial found in the `gsheets-plumber` directory of this repository.
-
-
-## How do I secure my docker container? 
-TODO
-
-
-### Helpful Links:
-https://code.markedmondson.me/googleCloudRunner/articles/cloudrun.html
-
-https://www.r-bloggers.com/2019/02/running-your-r-script-in-docker/
-
-Deploy a prebuilt sample container: https://cloud.google.com/run/docs/quickstarts/prebuilt-deploy
-
-Use Cloud Build to deploy a containerized application to cloud run https://cloud.google.com/build/docs/quickstart-deploy
-
-R Cloud Runner - https://github.com/MarkEdmondson1234/googleCloudRunner
-
-Serverless R Functions with Cloud Run
-https://ericjinks.com/blog/2019/serverless-R-cloud-run/
-
-Cloud Run with R Hello World
-https://github.com/Jinksi/cloudrun-helloworld-r
-
-## A way of deploying to Cloud Run via an RStudio Package:
-https://code.markedmondson.me/googleCloudRunner/articles/cloudrun.html
-
-## Further Reading
-Google Sheets + Cloud Run
-https://medium.com/google-cloud/google-sheets-cloud-run-ffc1875d2a1
-
-R-Powered Services that are simple, scalable, and Secure:
-https://towardsdatascience.com/r-powered-services-that-are-simple-scalabale-and-secure-4c454c159e48
-
-Using R and Python in Google Sheets Formulas
-
-
-## services required in GCP
-- docker enabled
-- cloud artifact registry
-- cloud build?
-
-
-## Another way to schedule R scripts (from RStudio)!
-!(https://code.markedmondson.me/googleCloudRunner/articles/cloudscheduler.html)
