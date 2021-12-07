@@ -1,0 +1,45 @@
+# cloudbuild.yaml
+
+# Replace fleet-cyclist-299216 with your GCP project ID
+# Replace plumber_test with the desired Cloud Run service name (e.g. hello-world)
+# Replace us-central1 with the GCP region you are deploying to (e.g. asia-northeast1)
+
+steps:
+  # build the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/fleet-cyclist-299216/gsheets_plumber', '.']
+    # push the container image to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/fleet-cyclist-299216/gsheets_plumber']
+    # Deploy container image to Cloud Run
+#   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+#     args:
+#       [
+# #        'beta',
+#         'run',
+#         'deploy',
+#         'plumber_test',
+#         '--image',
+#         'gcr.io/fleet-cyclist-299216/plumber_test',
+#         '--region',
+#         'us-central1',
+#         '--platform',
+#         'managed',
+#         '--quiet',
+#       ]
+# images:
+#   - gcr.io/fleet-cyclist-299216/plumber_test
+
+# steps:
+# # Build the container image
+# - name: 'gcr.io/cloud-builders/docker'
+#   args: ['build', '-t', 'gcr.io/fleet-cyclist-299216/plumber_test', '.']
+# # Push the container image to Container Registry
+# - name: 'gcr.io/cloud-builders/docker'
+#   args: ['push', 'gcr.io/fleet-cyclist-299216/plumber_test']
+# # Deploy container image to Cloud Run
+# - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+#   entrypoint: gcloud
+#   args: ['run', 'deploy', 'plumber_test', '--image', 'gcr.io/fleet-cyclist-299216/plumber_test', '--region', 'us-central1']
+# images:
+# - gcr.io/fleet-cyclist-299216/plumber_test
